@@ -26,7 +26,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 SECRET_KEY = 'django-insecure-i8*mq8@qk&xd4y!=x!)q8zss96d0ua)82wse@v6ef3$=zg%&%i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,18 +83,27 @@ WSGI_APPLICATION = 'tudu.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'todo',
-        'USER': 'postgres',
-        'PASSWORD': 'NotunPassword123',
-        'HOST': 'localhost',
-        'PORT': '5432'
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'todo',
+            'USER': 'postgres',
+            'PASSWORD': 'NotunPassword123',
+            'HOST': 'localhost',
+            'PORT': '5432'
+        }
+    }
+    if not DEBUG:
+        raise RuntimeError("DATABASE_URL is not set in the environment.")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
