@@ -1,1 +1,1 @@
-web: gunicorn tudu.wsgi
+web: gunicorn tudu.wsgi --bind 0.0.0.0:$PORT
