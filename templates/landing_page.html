@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+{% block title %}Welcome to TuDu - Organize Your Life{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Landing Page Specific Styles */
+  .landing-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .landing-hero::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    top: -200px;
+    right: -200px;
+  }
+
+  .landing-hero::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    bottom: -150px;
+    left: -150px;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    animation: fadeInUp 0.8s ease;
+  }
+
+  .hero-description {
+    font-size: 1.4rem;
+    font-weight: 300;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    animation: fadeInUp 1s ease;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-buttons {
+    animation: fadeInUp 1.2s ease;
+  }
+
+  .btn-hero {
+    padding: 16px 45px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    transition: all 0.3s;
+  }
+
+  .btn-hero-primary {
+    background: white;
+    color: #667eea;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .btn-hero-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    color: #667eea;
+  }
+
+  .btn-hero-secondary {
+    background: transparent;
+    color: white;
+    border: 3px solid white;
+  }
+
+  .btn-hero-secondary:hover {
+    background: white;
+    color: #667eea;
+    transform: translateY(-3px);
+  }
+
+  .hero-image {
+    position: relative;
+    z-index: 2;
+    animation: fadeInRight 1s ease;
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .task-card-demo {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+  .task-card-demo .icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+  }
+
+  .task-card-demo h3 {
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .task-card-demo p {
+    color: #6c757d;
+    margin: 0;
+  }
+
+  /* Features Section */
+  .features-section {
+    padding: 100px 0;
+    background: white;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+
+  .section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+
+  .section-subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+
+  .feature-item {
+    text-align: center;
+    padding: 40px 25px;
+    transition: all 0.3s;
+    border-radius: 15px;
+  }
+
+  .feature-item:hover {
+    transform: translateY(-10px);
+    background: #f8f9fa;
+  }
+
+  .feature-icon {
+    font-size: 4rem;
+    margin-bottom: 25px;
+    display: inline-block;
+  }
+
+  .feature-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+
+  .feature-text {
+    color: #6c757d;
+    line-height: 1.7;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 80px 0;
+    color: white;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .stat-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    padding: 100px 0;
+    background: #f8f9fa;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+
+  .cta-text {
+    font-size: 1.3rem;
+    color: #6c757d;
+    margin-bottom: 40px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+    .hero-description {
+      font-size: 1.1rem;
+    }
+    .section-title {
+      font-size: 2rem;
+    }
+    .stat-number {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block landing_content %}
+<!-- Hero Section -->
+<section class="landing-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 hero-content">
+        <h1 class="hero-title">Organize Your Life, One Task at a Time for Free</h1>
+        <p class="hero-description">The ultimate task management app that helps you stay focused, productive, and achieve your goals.</p>
+        <div class="hero-buttons">
+          <a href="{% url 'register' %}" class="btn-hero btn-hero-primary">Start Today</a>
+          <a href="{% url 'login' %}" class="btn-hero btn-hero-secondary">Sign In</a>
+        </div>
+      </div>
+      <div class="col-lg-6 hero-image">
+        <div class="task-card-demo">
+          <div class="icon">📝</div>
+          <h3>Your Tasks, Simplified</h3>
+          <p>Manage everything in one place</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Everything You Need to Stay Productive</h2>
+      <p class="section-subtitle">Powerful features designed to boost your efficiency</p>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-item">
+          <div class="feature-icon">✅</div>
+          <h3 class="feature-title">Smart Task Management</h3>
+          <p class="feature-text">Create, organize, and prioritize tasks with our intuitive interface. Never miss a deadline again.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <div class="feature-icon">🏆</div>
+          <h3 class="feature-title">Gamification</h3>
+          <p class="feature-text">Earn points for completing tasks and compete with others on the leaderboard. Make productivity fun!</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Progress Tracking</h3>
+          <p class="feature-text">Visualize your accomplishments with detailed statistics and insights about your productivity.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Set Priorities</h3>
+          <p class="feature-text">Organize tasks by priority levels and categories. Focus on what matters most to you.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <div class="feature-icon">⏰</div>
+          <h3 class="feature-title">Due Dates</h3>
+          <p class="feature-text">Set deadlines and get rewarded for completing tasks on time. Stay accountable and organized.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-item">
+          <div class="feature-icon">🚀</div>
+          <h3 class="feature-title">Fast & Simple</h3>
+          <p class="feature-text">Clean, modern interface that's easy to use. Start managing tasks in seconds, not hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="stat-item">
+          <div class="stat-number">10K+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-item">
+          <div class="stat-number">50K+</div>
+          <div class="stat-label">Tasks Completed</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <h2 class="cta-title">Ready to Boost Your Productivity?</h2>
+    <p class="cta-text">Join thousands of users who are achieving more every day with TuDu</p>
+    <a href="{% url 'register' %}" class="btn-hero btn-hero-primary">Get Started - It's Free</a>
+  </div>
+</section>
+{% endblock %}

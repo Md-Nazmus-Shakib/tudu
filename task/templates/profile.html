@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style>
+  .profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 0;
+    margin-bottom: 40px;
+    border-radius: 0 0 50px 50px;
+  }
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    margin: 0 auto 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .stat-card {
+    border: none;
+    border-radius: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    position: relative;
+  }
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+  }
+  .stat-card.total::before {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+  .stat-card.pending::before {
+    background: linear-gradient(90deg, #f093fb, #f5576c);
+  }
+  .stat-card.completed::before {
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+  }
+  .stat-card.delayed::before {
+    background: linear-gradient(90deg, #f70404ff, #f70404ff);
+  }
+  .stat-icon {
+    font-size: 3rem;
+    opacity: 0.2;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  .stat-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0;
+  }
+  .task-section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+  }
+  .task-item {
+    border: none;
+    border-left: 4px solid #e9ecef;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    transition: all 0.3s;
+  }
+  .task-item:hover {
+    transform: translateX(10px);
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .task-item.pending {
+    border-left-color: #ffc107;
+  }
+  .task-item.completed {
+    border-left-color: #28a745;
+  }
+  .section-title {
+    font-weight: 700;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+  }
+  .empty-state-icon {
+    font-size: 4rem;
+    opacity: 0.3;
+    margin-bottom: 15px;
+  }
+</style>
+
+<div class="profile-header">
+  <div class="container text-center">
+    <div class="profile-avatar">
+      🐼
+    </div>
+    <h1 class="display-4 fw-bold mb-2">{{ user.username }}</h1>
+    {% comment %} <p class="lead mb-0">{{ user.email|default:"No email set" }}</p> {% endcomment %}
+    <div style="margin: 2rem 29rem;display:flex;justify-content:center;width: 15%; height: 50px; padding: .75rem 1rem; border: 1px solid #e9ecef; border-radius: .75rem; background: #f8f9fa;color:black">
+  <p style="font-weight:bold;">⭐ Points :    <strong> {{user_profile.user_points}} </strong></p>
+</div>
+    <p class="mt-2 opacity-75">
+      <i class="bi bi-calendar3"></i> Member since {{ user.date_joined|date:"F Y" }}
+    </p>
+  </div>
+</div>
+
+<div class="container" >
+    
+  <!-- Task Statistics -->
+  <div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="card stat-card total shadow-sm">
+        <div class="card-body p-4 position-relative">
+          <div class="stat-icon">📊</div>
+          <h6 class="text-muted mb-2 fw-semibold">Total Tasks</h6>
+          <p class="stat-number text-primary mb-0">{{ count_tasks }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card stat-card pending shadow-sm">
+        <div class="card-body p-4 position-relative">
+          <div class="stat-icon">⏳</div>
+          <h6 class="text-muted mb-2 fw-semibold">Pending</h6>
+          <p class="stat-number text-danger mb-0">{{ pending_tasks.count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card stat-card completed shadow-sm">
+        <div class="card-body p-4 position-relative">
+          <div class="stat-icon">✅</div>
+          <h6 class="text-muted mb-2 fw-semibold">Completed</h6>
+          <p class="stat-number text-success mb-0">{{ completed_tasks.count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card stat-card delayed shadow-sm">
+        <div class="card-body p-4 position-relative">
+          <div class="stat-icon">⚠️</div>
+          <h6 class="text-muted mb-2 fw-semibold">Delayed</h6>
+          <p class="stat-number text-warning mb-0">{{ delayed_tasks.count }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+ 
+  </div>
+
+  <!-- Task Lists -->
+  <div class="row">
+    <!-- Pending Tasks -->
+    <div class="col-lg-6 mb-4">
+      <div class="task-section">
+        <h3 class="section-title">
+          ⏳ Pending Tasks
+          <span class="badge bg-warning text-dark ms-2">{{ pending_tasks.count }}</span>
+        </h3>
+        {% if pending_tasks %}
+          {% for task in pending_tasks %}
+            <div class="task-item pending">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="mb-1 fw-semibold">{{ task.title }}</h6>
+                  <small class="text-muted">
+                    <i class="bi bi-calendar-event"></i> Due: {{ task.due_date|date:"M d, Y" }}
+                    {% if task.category %}
+                      | <i class="bi bi-tag"></i> {{ task.get_category_display }}
+                    {% endif %}
+                  </small>
+                </div>
+                <span class="badge bg-warning text-dark">Pending</span>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-state-icon">🎉</div>
+            <p class="mb-0">No pending tasks! You're all caught up.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Completed Tasks -->
+    <div class="col-lg-6 mb-4">
+      <div class="task-section">
+        <h3 class="section-title">
+          ✅ Completed Tasks
+          <span class="badge bg-success ms-2">{{ completed_tasks.count }}</span>
+        </h3>
+        {% if completed_tasks %}
+          {% for task in completed_tasks %}
+            <div class="task-item completed">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="mb-1 fw-semibold text-decoration-line-through text-muted">{{ task.title }}</h6>
+                  <small class="text-muted">
+                    <i class="bi bi-calendar-check"></i> Completed: {{ task.due_date|date:"M d, Y" }}
+                    {% if task.category %}
+                      | <i class="bi bi-tag"></i> {{ task.get_category_display }}
+                    {% endif %}
+                  </small>
+                </div>
+                {% if task.is_late %}
+                <span class="badge bg-danger">Delayed</span>
+                {% endif %}
+                <span class="badge bg-success">Done</span>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p class="mb-0">No completed tasks yet. Start checking them off!</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="text-center mb-5">
+    <a href="{% url 'task_create' %}" class="btn btn-primary btn-lg px-5 me-3">
+      ➕ Create New Task
+    </a>
+    <a href="{% url 'task_list' %}" class="btn btn-outline-primary btn-lg px-5">
+      📋 View All Tasks
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}Task List{% endblock %}
+
+{% block content %}
+<style>
+  .task-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid #6c757d;
+    cursor: pointer;
+  }
+  .task-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+  .task-card.completed {
+    border-left-color: #28a745;
+    opacity: 0.85;
+  }
+  .task-card.pending {
+    border-left-color: red;
+  }
+  .task-card.in-progress {
+    border-left-color: #17a2b8;
+  }
+  .filter-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 25px;
+    color: white;
+    margin-bottom: 30px;
+  }
+  .task-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  .badge-priority {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .task-actions {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .task-card:hover .task-actions {
+    opacity: 1;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+  }
+  .empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.3;
+  }
+  .toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+</style>
+
+<!-- Toast Notifications -->
+<div class="toast-container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast align-items-center text-white bg-{{ message.tags }} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ message }}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<div class="container py-4">
+  <h1 class="task-header">✨ My Tasks</h1>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <form method="get" class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label fw-bold">📊 Status</label>
+        <select name="status" class="form-select">
+          <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>⏳ Pending</option>
+          <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>✅ Completed</option>
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Tasks</option>
+          
+          <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>🚀 In Progress</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label fw-bold">🏷️ Category</label>
+        <select name="category" class="form-select">
+          <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
+          <option value="work" {% if category_filter == 'work' %}selected{% endif %}>💼 Work</option>
+          <option value="personal" {% if category_filter == 'personal' %}selected{% endif %}>🏠 Personal</option>
+          <option value="others" {% if category_filter == 'others' %}selected{% endif %}>📌 Others</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-light fw-bold w-100" type="submit">
+          🔍 Apply Filters
+        </button>
+      </div>
+      <div class="col-md-3">
+        <a class="btn btn-outline-light fw-bold w-100" href="{% url 'task_list' %}">
+          🔄 Reset
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Task Statistics -->
+  <div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="card text-center border-0 shadow-sm">
+        <div class="card-body">
+          <h3 class="display-4 text-primary"style="font-weight:bold">{{ stat_count.all }}</h3>
+          <p class="text-muted mb-0">Total Tasks</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card text-center border-0 shadow-sm">
+        <div class="card-body">
+          <h3 class="display-4 text-danger"style="font-weight:bold">{{ stat_count.pending }}</h3>
+          <p class="text-muted mb-0">Pending</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card text-center border-0 shadow-sm">
+        <div class="card-body">
+          <h3 class="display-4 text-success"style="font-weight:bold">{{ stat_count.completed }}</h3>
+          <p class="text-muted mb-0">Completed</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card text-center border-0 shadow-sm">
+        <div class="card-body">
+          <h3 class="display-4 text-warning"style="font-weight:bold">{{ stat_count.delayed }}</h3>
+          <p class="text-muted mb-0">Delayed</p>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+  <!-- Tasks Grid -->
+  {% if tasks %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for task in tasks %}
+        <div class="col">
+          <div class="card task-card {% if task.is_completed %}completed{% elif task.status == 'in_progress' %}in-progress{% else %}pending{% endif %} h-100 border-0 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0">
+                  
+                    {% if task.is_completed %}✅{% elif task.status == 'in_progress' %}🚀{% else %}⏳{% endif %}
+                    {{ task.title }}
+                  </a>
+                </h5>
+                {% if task.is_completed and task.is_late %}
+                  <span class="badge bg-danger">Delayed</span>
+                {% elif task.is_completed %}
+                  <span class="badge bg-success">Completed</span>
+                {% elif task.status == 'in_progress' %}
+                  <span class="badge bg-info">In Progress</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark">Pending</span>
+                {% endif %}
+              </div>
+
+              <p class="card-text text-muted small mb-3">
+                {{ task.description|truncatewords:15 }}
+              </p>
+
+              <div class="mb-3">
+                <span class="badge badge-priority bg-light text-dark border">
+                  {% if task.category == 'work' %}💼{% elif task.category == 'personal' %}🏠{% else %}📌{% endif %}
+                  {{ task.get_category_display }}
+                </span>
+                <span class="badge badge-priority bg-light text-dark border ms-1">
+                  📅 {{ task.due_date|date:"M d" }}
+                </span>
+                <span class="badge badge-priority bg-light text-dark border ms-1">
+                  ⏰ {{ task.due_time|time:"H:i" }}
+                </span>
+              </div>
+
+              <div class="task-actions d-flex gap-2">
+                <a href="{% url 'task_edit' task.id %}" class="btn btn-sm btn-outline-primary flex-fill">
+                  ✏️ Edit
+                </a>
+                {% if not task.is_completed %}
+                  <a href="{% url 'task_complete' task.id %}" 
+                  class="btn btn-sm btn-outline-success flex-fill"
+                  onclick="if(this.classList.contains('disabled')) return false; this.classList.add('disabled'); this.innerHTML='⏳ Processing...';">
+                    ✓ Complete
+                  </a>
+                {% endif %}
+                <a href="{% url 'task_delete' task.id %}" class="btn btn-sm btn-outline-danger">
+                  🗑️
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div>📋</div>
+      <h3>No tasks found</h3>
+      <p class="mb-4">Start by creating your first task!</p>
+      <a href="{% url 'task_create' %}" class="btn btn-primary btn-lg">
+        ➕ Create New Task
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Task Detail Modal -->
+
+<script>
+  // Auto-show toasts on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toast').forEach(function(toastEl) {
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    });
+  });
+</script>
+
+{% endblock %}
