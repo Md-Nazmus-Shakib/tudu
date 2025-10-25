@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-i8*mq8@qk&xd4y!=x!)q8zss96d0ua)82wse@v6ef3$=zg%&%i
 # DEBUG = True
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = (os.environ.get('DATABASE_URL') or '').strip()
 
 ALLOWED_HOSTS = ['*']
 
@@ -79,7 +79,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tudu.wsgi.application'
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://tudu-458v.onrender.com",  # your Render URL
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -139,7 +141,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
