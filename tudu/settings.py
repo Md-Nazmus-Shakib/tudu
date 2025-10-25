@@ -104,8 +104,7 @@ else:
             'PORT': '5432'
         }
     }
-    if not DEBUG:
-        raise RuntimeError("DATABASE_URL is not set in the environment.")
+    
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
