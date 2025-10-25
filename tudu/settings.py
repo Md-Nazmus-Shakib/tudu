@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-i8*mq8@qk&xd4y!=x!)q8zss96d0ua)82wse@v6ef3$=zg%&%i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://tudu-3d41.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'tudu.wsgi.application'
 #     }
 # }
 DATABASES = {
-    'default': dj_database_url.config(default='django.db.backends.postgresql')
+    'default': dj_database_url.config(default='postgres://postgres:NotunPassword123@localhost:5432/todo')
 }
 
 
