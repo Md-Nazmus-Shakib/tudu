@@ -179,7 +179,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # ❌ WRONG: Don't include https:// in ALLOWED_HOSTS
 # ✅ CORRECT: Just the domain name
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1','tudu-3d41.onrender.com').split(',')
 
 
 # Application definition
