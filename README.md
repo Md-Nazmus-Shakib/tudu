@@ -113,21 +113,45 @@ Static files & assets
 Screenshots
 ---------
 Below are the screenshots for Tudu. To render them in this README, add the image files to the repository at `docs/screenshots/` with the exact filenames used below.
-
+<h1>Landing Page</h1>
 <p align="center">
-  <img src="docs/screenshots/screenshot-1.png" alt="Tudu - Landing / Hero" width="1100" />
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20175712.png" alt="Tudu - Landing / Hero" width="1100" />
 </p>
-*Landing / Hero — primary marketing view with call-to-action.*
 
+<h1>Dashboard</h1>
 <p align="center">
-  <img src="docs/screenshots/screenshot-2.png" alt="Tudu - Dashboard filters and stats" width="1100" />
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20180124.png" alt="Tudu - Dashboard filters and stats" width="1100" />
 </p>
-*Dashboard — filters bar and task summary cards.*
 
+<h1>Task List</h1>
 <p align="center">
-  <img src="docs/screenshots/screenshot-3.png" alt="Tudu - Task list view" width="1100" />
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20180242.png" alt="Tudu - Task list view" width="1100" />
 </p>
-*Task list view — card-style tasks with status badges.*
+
+<h1>Profile</h1>h
+<p align="center">
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20180343.png" alt="Tudu - Task list view" width="1100" />
+</p>
+
+<h1>LeaderBoard</h1>
+<p align="center">
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20182722.png" alt="Tudu - Task list view" width="1100" />
+</p>
+
+<h1>Task Detail/complete/edit/delete</h1>
+<p align="center">
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20183350.png" alt="Tudu - Task list view" width="1100" />
+</p>
+
+<h1>Create Task</h1>
+<p align="center">
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20193600.png" alt="Tudu - Task list view" width="1100" />
+</p>
+
+<h1>Edit Task</h1>
+<p align="center">
+  <img src="https://github.com/Md-Nazmus-Shakib/tudu/blob/main/Screenshot%202025-10-26%20183456.png" alt="Tudu - Task list view" width="1100" />
+</p>
 
 How to add the screenshots
 1) Using git (recommended)
