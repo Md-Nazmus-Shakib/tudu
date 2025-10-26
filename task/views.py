@@ -114,6 +114,7 @@ def TaskCompleteView(request,task_id):
     return redirect('task_list',)
 @login_required
 def TaskDetailEditView(request,task_id):
+    user_profile = models.UserProfile.objects.get(user=request.user)
     task = get_object_or_404(models.Task,id=task_id,user=request.user)
     form = forms.TaskForm(instance=task)
     if request.method == 'POST':
@@ -123,7 +124,7 @@ def TaskDetailEditView(request,task_id):
             task.user = request.user
             task.save()
             return redirect('task_list')
-    return render(request,'create_task.html',{'form':form,'edit':True})
+    return render(request,'create_task.html',{'form':form,'edit':True, 'user_profile':user_profile})
 
 def register(request):
     if request.method == 'POST':

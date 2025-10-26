@@ -26,10 +26,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 SECRET_KEY = 'django-insecure-i8*mq8@qk&xd4y!=x!)q8zss96d0ua)82wse@v6ef3$=zg%&%i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
+# DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-DATABASE_URL = (os.environ.get('DATABASE_URL') or '').strip()
+# DATABASE_URL = (os.environ.get('DATABASE_URL') or '').strip()
 
 ALLOWED_HOSTS = ['*']
 
@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'tudu.urls'
 
@@ -79,22 +79,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tudu.wsgi.application'
-CSRF_TRUSTED_ORIGINS = [
-    "https://tudu-458v.onrender.com",  # your Render URL
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://tudu-458v.onrender.com",  # your Render URL
+# ]
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-if  DATABASE_URL.startswith('postgres://') or DATABASE_URL.startswith('postgresql://'):
-    DATABASES = {
-        'default': dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    DATABASES = {
+# if  DATABASE_URL.startswith('postgres://') or DATABASE_URL.startswith('postgresql://'):
+#     DATABASES = {
+#         'default': dj_database_url.parse(
+#             DATABASE_URL,
+#             conn_max_age=600,
+#             conn_health_checks=True,
+#         )
+#     }
+# else:
+DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'todo',

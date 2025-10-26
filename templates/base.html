@@ -305,9 +305,9 @@
             <span>⭐</span>
             <span>{{ user_profile.user_points }} pts</span>
           </div>
-          <button type="button" class="btn btn-custom-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <a  class="btn btn-custom-primary" href="{% url 'task_create' %}">
             ➕ New Task
-          </button>
+          </a>
           <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
             {% csrf_token %}
             <button class="btn btn-custom-logout" type="submit">Logout</button>

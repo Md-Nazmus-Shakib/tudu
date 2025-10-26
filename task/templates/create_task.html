@@ -11,6 +11,10 @@
   <form method="POST">
     {% csrf_token %}
     {{ form|crispy }}
+    {% if edit %}
+      <button type="submit" class="btn btn-primary">Update Task</button>
+    {% else %}
     <button type="submit" class="btn btn-primary">Create Task</button>
+    {% endif %}
   </form>
 {% endblock %}
