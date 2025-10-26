@@ -14,9 +14,12 @@ Project snapshot
 Features
 - Create, edit, and delete tasks
 - Mark tasks as complete/incomplete
-- Responsive UI with Bootstrap
-- Server-side persistence using Django models
-- Easy to deploy (Procfile + build script included)
+-Point for complete task
+-Pusnish ponint for late complete
+-Detect Delayed task and mark them 
+- Leaderboard
+-Profile view
+
 
 Table of Contents
 - Tech stack
